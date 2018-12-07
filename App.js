@@ -1,21 +1,40 @@
 import React, { Component } from 'react';
 import { Alert, Button, FlatList, ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import { createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation';
+import { createAppContainer, createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation';
 
-import flatListScreen from "./screens/flatListScreen";
-import textInputScreen from "./screens/textInputScreen";
+import FlatListScreen from "./screens/FlatListScreen";
+import TextInputScreen from "./screens/TextInputScreen";
+import HomeScreen from "./screens/HomeScreen";
+import AnalysisScreen from "./screens/AnalysisScreen";
+import HistoryScreen from "./screens/HistoryScreen";
+import FactsScreen from "./screens/FactsScreen";
 
-export default createMaterialTopTabNavigator ({
+const FlatListStack = createStackNavigator ({
+  FlatList: {
+    screen: FlatListScreen, 
+  },
+  Analysis: {
+    screen: AnalysisScreen, 
+  },
+  History: {
+    screen: HistoryScreen,
+  },
+  Facts: {
+    screen: FactsScreen,
+  }
+});
+
+const AppNavigator = createMaterialTopTabNavigator ({
   Home: {
     screen: HomeScreen
   },
   Data: {
-    screen: flatListScreen
+    screen: FlatListStack
   },
   Inputs: {
-    screen: textInputScreen,
+    screen: TextInputScreen,
     navigationOptions: {
-      tabBarLabel: 'Settings',
+      tabBarLabel: 'Inputs',
       tabBarIcon: ({tintColor}) => (
         <Icon name="" color={tintcolor} size={24} />
       )
@@ -26,7 +45,7 @@ export default createMaterialTopTabNavigator ({
     swipeEnabled: true,
     animationEnabled: true,
     tabBarOptions: {
-      activeTintColor: 'orange',  
+      activeTintColor: '#ff0000',  
       inactiveTintColor: 'grey',
       style: {
         backgroundColor: '#f2f2f2',  
@@ -38,3 +57,10 @@ export default createMaterialTopTabNavigator ({
     }
   });
 
+const AppContainer = createAppContainer(AppNavigator);
+
+export default class App extends React.Component {
+  render() {
+    return <AppContainer />  
+  }  
+}

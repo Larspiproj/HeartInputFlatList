@@ -1,43 +1,156 @@
 import React, { Component } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
-import flatListData from '../data/flatListData';
+import { ActivityIndicator, AsyncStorage, TouchableOpacity, FlatList, StyleSheet,
+        Text, View } from 'react-native';
 
-class FlatListItem extends Component {
-  render() {
+class FlatListScreen extends Component {
+  static navigationOptions = {
+    header: null  
+  }
+
+  constructor(props) {
+    super(props);
+    this.state={
+      isLoading: true,
+      refreshing: false,
+      dataSource: [] 
+    }
+  };
+
+  componentDidMount() {
+    console.log("FlatListScreen componentDidMount")  
+    //this._initialState().done();
+    this._latestAnalysis();
+  };
+
+  componentDidUpdate() {
+    console.log("FlatListScreen componentDidUpdate");  
+  };
+
+  /*
+  _initialState = async() => {
+    try {
+      const nextKey = await AsyncStorage.getItem('nextKey');
+      if (!nextKey) {
+        await AsyncStorage.multiSet([['nextKey', JSON.stringify(0)],
+        ['nextId', JSON.stringify(0)]])
+        .then(() =>
+          this.setState ({
+            id: 0,
+            key: 0 
+          }));
+      }  
+    }
+    catch(error) {
+      console.log("error _initialState: ", error);  
+    }
+  }
+  */
+
+  _latestAnalysis = async() => {
+    try {
+        const latestKey = await AsyncStorage.getItem('latestKey');
+        if (!latestKey) {
+          //alert("No values to show yet");
+          this.setState ({
+            isLoading: false,
+            refreshing: false,  
+            dataSource: [{analysis: "No data yet.", result: "Go to inputs", id: 0}],
+          });
+        } else {
+          const latestValues = await AsyncStorage.getItem(latestKey.toString());
+          const dataSource = JSON.parse(latestValues);
+          this.setState ({
+            isLoading: false,
+            refreshing: false,
+            dataSource: dataSource,  
+          });
+        }
+    }
+
+    catch(error) {
+      console.log("error _latestAnalysis: ", error);  
+    }
+  };
+
+  _handleRefresh = () => {
+    this.setState({
+      refreshing: true,  
+    },
+    () => {
+      this._latestAnalysis();  
+    });  
+  };
+
+  _renderSeparator = () => {
     return (
-      <View style={{
-        flex: 1,
-        backgroundColor: this.props.index % 2 == 0 ? 'green' : 'grey'  
-      }}>
-        <View style={styles.rowsContainer}>
-            <Text style={[styles.flatListItem, styles.param]}>
-              {this.props.item.param}:</Text>
-            <Text style={[styles.flatListItem, styles.solar]}>
-              {this.props.item.solar}</Text>
-        </View>
-      </View>
+      <View
+        style={{
+          height: 1,
+          width: "90%",  
+          backgroundColor: "#ced0ce",
+          marginLeft: "5%",
+        }}
+      />
     );  
-  }  
-}
+  };
 
-export default class BasicFlatList extends Component {
   render() {
+    console.log("FlatListScreen render executed");
+    if(this.state.isLoading) {
+      return(
+        <View style={{flex: 1, padding: 50}}>
+          <ActivityIndicator size='large' />
+        </View>
+      );
+    }
     return (
       <View style={styles.container}>
-        <FlatList
-          data={flatListData}
-          keyExtractor={item => item.key.toString()}
-          renderItem={({item}) => {
-          console.log("Item =", JSON.stringify(item), "index =", item.key);
-            return (
-              <FlatListItem
-                item={item}
-                index={item.key}
-              />
-            );
-          }}
-          >
-        </FlatList>
+        <View style={styles.topContainer}>
+          <View style={styles.header}>
+            <View style={styles.headerLeft}>
+              <Text>col1</Text>
+            </View>
+            <View style={styles.headerCenter}>
+              <Text style={{fontSize: 18}}>Analysis</Text>
+            </View>
+            <View style={styles.headerRight}>
+              <Text>col3</Text>
+            </View>
+          </View>
+        </View>
+        <View style={styles.flatListContainer}>
+          <FlatList
+            data={this.state.dataSource}
+            keyExtractor={item => item.id.toString()}
+            ItemSeparatorComponent={this._renderSeparator}
+            refreshing={this.state.refreshing}
+            onRefresh={this._handleRefresh}
+            renderItem={({item}) =>
+            <TouchableOpacity onPress={() => {
+              this.props.navigation.navigate('Analysis', {
+                  analysis: item.analysis,
+                  result: item.result,
+                  date: this.state.dataSource[0].result,
+                  id: item.id,
+              });
+            console.log("dataSource from FlatListScreen: ", this.state.dataSource);
+            }}
+            >
+              <View style={{
+                flex: 1,
+                //backgroundColor: this.props.index % 2 == 0 ? '#fdfdfd' : '#990000'  
+              }}>
+                <View style={styles.rowsContainer}>
+                  <Text style={[styles.flatListItem, styles.analysis]}>
+                    {item.analysis}</Text>
+                  <Text style={[styles.flatListItem, styles.result]}>
+                    {item.result}</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+            }
+          />
+        </View>
       </View>
     );
   }
@@ -46,32 +159,74 @@ export default class BasicFlatList extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 30
-    //backgroundColor: '#fff',
-    //alignItems: 'center',
-    //justifyContent: 'center',
+    marginTop: 30,
+    backgroundColor: '#fdfdfd',
+    alignItems: 'stretch',
+    //justifyContent: 'flex-end',
   },
-  rows: {
+  topContainer: {
     flex: 1,
-    //backgroundColor: this.props.index % 2 == 0 ? 'green' : 'grey'  
+    backgroundColor: '#f2f2f2',
+    borderBottomWidth: 2,
+    borderBottomColor: '#ff0000',
+  },
+  header: {
+    flex: 1,
+    flexDirection: 'row',  
+  },
+  headerLeft: {
+    flex:1,
+    justifyContent: 'center',
+    marginLeft: 20,
+  },
+  headerCenter: {
+    flex:1, 
+    justifyContent: 'center',
+    marginLeft: 20,
+  },
+  headerRight: {
+    flex:1, 
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    marginRight: 20,
+  },
+  flatListContainer: {
+    flex: 7,
+    justifyContent: 'flex-start',
   },
   flatListItem: {
-    color: "white",
-    padding: 10,
-    fontSize: 16  
+    //color: "white",
+    padding: 15,
+    marginLeft: 10,
+    //fontSize: 16  
   },
   rowsContainer: {
     flex: 1,
     flexDirection: "row", 
   },
-  param: {
-    flex: 2,
+  analysis: {
+    flex: 3,
     textAlign: "left",
     alignItems: "center",
+    fontSize: 18,
   },
-  solar: {
-    flex: 3,
+  result: {
+    flex: 2,
     textAlign: "left",  
     alignItems: "center",
+    fontSize: 20,
+  },
+  btn: {
+    //flex: 1,
+    alignSelf: 'center',
+    //backgroundColor: '#01c853',  
+    backgroundColor: '#008000',  
+    padding: 10,
+    alignItems: 'center',
+    marginBottom: 30,
+    width: 200,
+    borderRadius: 10,
   },
 });
+
+export default FlatListScreen;

@@ -1,7 +1,6 @@
 import React from 'react'
 import { ScrollView, KeyboardAvoidingView, Keyboard, Alert, AsyncStorage,
-   TouchableOpacity, TextInput, StyleSheet, Text, View, DatePickerAndroid }
-   from 'react-native';
+   TouchableOpacity, TextInput, StyleSheet, Text, View } from 'react-native';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -125,21 +124,20 @@ export default class App extends React.Component {
       const inputs = [
         {"id": this.state.id, "analysis": "date", "result": this.state.date},
         {"id": this.state.id+1, "analysis": "kolesterol",
-        "result": this.state.kolesterol, "date": this.state.date},
+        "result": this.state.kolesterol},
         {"id": this.state.id+2, "analysis": "LDL_kolesterol",
-        "result": this.state.LDL_kolesterol, "date": this.state.date},
+        "result": this.state.LDL_kolesterol},
         {"id": this.state.id+3, "analysis": "HDL_kolesterol",
-        "result": this.state.HDL_kolesterol, "date": this.state.date},
+        "result": this.state.HDL_kolesterol},
         {"id": this.state.id+4, "analysis": "triglycerider",
-        "result": this.state.triglycerider, "date": this.state.date},
+        "result": this.state.triglycerider},
         {"id": this.state.id+5, "analysis": "apolipoproteiner",
-        "result": this.state.apolipoproteiner, "date": this.state.date},
+        "result": this.state.apolipoproteiner},
         {"id": this.state.id+6, "analysis": "bloodpressure",
-        "result": this.state.bloodpressure, "date": this.state.date},
+        "result": this.state.bloodpressure},
         {"id": this.state.id+7, "analysis": "HbA1c_bloodsugar",
-        "result": this.state.HbA1c_bloodsugar, "date": this.state.date},
-        {"id": this.state.id+8, "analysis": "waist", "result": this.state.waist,
-        "date": this.state.date}
+        "result": this.state.HbA1c_bloodsugar},
+        {"id": this.state.id+8, "analysis": "waist", "result": this.state.waist}
       ]
         console.log("2 inputs: ", inputs);
         console.log("3 key and id: ", this.state.key, this.state.id);
@@ -168,22 +166,75 @@ export default class App extends React.Component {
           waist: "",
         }));
       console.log("5 key and id: ", this.state.key, this.state.id);
-      Alert.alert('Data submitted');
     } catch(error) {
         console.log("error _submit: ", error);  
     }
   }
 
-  _confirmRemoveData = () => {
-    Alert.alert(
-      'Remove data',
-      'Confirm you want to delete all data',
-      [
-        {text: 'Cancel'},
-        {text: 'Delete', onPress: () => this._removeData()},
-      ],
-      { cancelable: false }
-    );  
+  _displayData = async() => {
+    try {
+        const keys = await AsyncStorage.getAllKeys()
+        if (keys.length<1) {
+          console.log("keys empty");
+        }
+        let filtered = [];
+        const keyNrarray = [];
+        let keysSorted = [];
+        const values = [];
+        const keyArray = [];
+        const remove = ["nextKey", "nextId", "latestKey"]
+
+        filtered = keys.filter(
+          function(value) {
+            return this.indexOf(value) < 0;
+          },
+          remove
+        );
+
+        //filtered = keys.filter(function(value) {
+          //return value != "nextKey";  
+        //});
+        console.log("filtered: ", filtered);
+
+        keysSorted = filtered.sort(function(a, b){return a-b});
+        console.log("keysSorted: ", keysSorted);
+
+        keyNrArray = filtered.map(Number);
+        console.log("keyNrArray: ", keyNrArray);
+
+        const items = await AsyncStorage.multiGet((keysSorted), (error, stores) => {
+        stores.map((result, i, store) => {
+          //console.log("stores: ", stores);
+          //console.log("result", result);
+          //console.log("i",i);
+          //console.log("store", store);
+          let key = store[i][0];
+          //console.log("key: ", key);
+          keyArray.push(key);
+          let value = JSON.parse(store[i][1]);
+          values.push(value);
+          //console.log("value: ", value);  
+          //keyNrArray = keysSortedArray.map(Number);
+          //console.log("keyNrArray: ", keyNrArray);
+        });
+        });
+        //const latestKey = keyNrArray.slice(-1)[0];
+        const latestKey = await AsyncStorage.getItem('latestKey');
+        console.log("latestKey: ", latestKey);
+        console.log("values: ", values);
+
+        const latestValues = await AsyncStorage.getItem(latestKey.toString());
+        //console.log("latest values: ", latestValues);
+        console.log("latest parsed values: ", JSON.parse(latestValues));
+
+        const dataSource = [JSON.parse(latestValues)];
+        console.log("dataSource: ", dataSource);
+        //console.log("values[5]: ", values[5].kolesterol);
+    }
+
+    catch(error) {
+      console.log("error _displayData: ", error);  
+    }
   }
 
   _removeData = async() => {
@@ -191,40 +242,20 @@ export default class App extends React.Component {
       const keys = await AsyncStorage.getAllKeys();
       if (keys.length === 0) {
         console.log("Keys to remove empty");  
-        alert("Nothing to delete");
       }
       console.log("Keys to remove: ", keys);
       await AsyncStorage.multiRemove(keys);
-      this._initialState();
-      Alert.alert('Data removed');
     }
     catch(error) {
       alert(error);
     } 
   }
 
-  _datePicker = async() => {
-    try {
-      const {action, year, month, day} = await DatePickerAndroid.open({
-        //date: this.state.selectedDate
-        date: new Date()
-      });
-      if (action !== DatePickerAndroid.dismissedAction) {
-          const date = new Date(year, month,day);
-          //this.setState({selectedDate: date.toLocaleDateString()});
-          this.setState({date: date.toLocaleDateString()});
-      }
-    } catch ({code, message}) {
-      console.warn('Cannot open date Picker', message);  
-    }
-  }
-
   render() {
-    console.log("TextInputScreen render executed");
     return(
       <KeyboardAvoidingView behavior='padding' style={styles.wrapper}>
         <ScrollView contentContainerStyle={styles.contentContainer}>
-          <View style={styles.headerContainer}>
+          <View style={styles.topContainer}>
             <Text style={styles.header}>-Input values-</Text>
             <Text style = {{fontSize: 16, fontWeight: 'bold', color: '#fff',
               marginBottom: 30}}>
@@ -234,15 +265,13 @@ export default class App extends React.Component {
           <View style={styles.middleContainer}>
             <TextInput
               style={styles.textInput}
-              placeholder='date'
+              placeholder='yyyymmdd'
               placeholderTextColor='#ced0ce'
               value={this.state.date}
               //onEndEditing={this._submit}
               returnKeyType='next'
               underlineColorAndroid='#ced0ce'
               blurOnSubmit={ false }
-              onFocus={
-                () => this._datePicker()}
               onSubmitEditing={
                 () => this.focusNextField('kolesterol')}
               onChangeText={
@@ -401,10 +430,15 @@ export default class App extends React.Component {
 
             <TouchableOpacity
               style={styles.btn}
-              onPress={this._confirmRemoveData}>
-              <Text>Remove stored data</Text>
+              onPress={this._displayData}>
+              <Text>Display stored data</Text>
             </TouchableOpacity>
 
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={this._removeData}>
+              <Text>Remove stored data</Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -422,7 +456,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     //flex: 1,
     //paddingVertical: 20,
-    //alignItems: 'stretch',
+    alignItems: 'stretch',
     //justifyContent: 'center',
     //backgroundColor: '#2896d3',
     //backgroundColor: '#990000',
@@ -430,24 +464,15 @@ const styles = StyleSheet.create({
     //paddingLeft: 40,
     //paddingRight: 40,    
   },
-  headerContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f2f2f2',  
-  },
   topContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fdfdfd',
+    backgroundColor: '#f2f2f2',
     //marginBottom: 20,
     //borderBottomWidth: 1,
     //borderBottomColor: '#990000',
   },
   middleContainer: {
-    flex:4,
-    alignItems: 'stretch',  
+    flex:4,  
   },
   header: {
     fontSize: 24,
@@ -479,14 +504,11 @@ const styles = StyleSheet.create({
     flex: 1,
     //alignSelf: 'stretch',
     //backgroundColor: '#01c853',  
-    //backgroundColor: '#008000',
-    borderWidth: 2,
-    borderColor: 'red',
+    backgroundColor: '#008000',  
     padding: 10,
     alignItems: 'center',
-    marginBottom: 10,
-    //width: '70%',
+    marginBottom: 30,
+    width: 200,
     borderRadius: 10,
-    fontSize: 18,
   },
 });
