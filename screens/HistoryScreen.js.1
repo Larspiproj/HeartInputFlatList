@@ -136,6 +136,9 @@ class HistoryScreen extends Component {
             </TouchableOpacity>
           </View>
         </View>
+        <View style={styles.topContainer}>
+          <Text>id: { this.state.id }</Text>
+        </View>
         <View style={styles.flatListContainer}>
           <FlatList
             data={this.state.dataSource}
@@ -149,9 +152,13 @@ class HistoryScreen extends Component {
                 //backgroundColor: this.props.index % 2 == 0 ? '#fdfdfd' : '#990000'  
               }}>
                 <View style={styles.rowsContainer}>
-                  <Text style={styles.analysis}>
-                    {item.date}</Text>
-                  <Text style={styles.result}>
+                  <View style={styles.analysisContainer}>
+                    <Text style={styles.dateText}>
+                      {item.date}</Text>
+                    <Text style={[styles.flatListItem, styles.analysis]}>
+                      {item.analysis}</Text>
+                  </View>
+                  <Text style={[styles.flatListItem, styles.result]}>
                     {item.result}</Text>
                 </View>
               </View>
@@ -184,7 +191,7 @@ const styles = StyleSheet.create({
     //borderBottomColor: 'black',
   },
   flatListContainer: {
-    flex: 7,
+    flex: 5,
     justifyContent: 'flex-start',
   },
   flatListItem: {
@@ -202,15 +209,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',  
   },
   analysis: {
-    flex: 3,
-    textAlign: "left",
-    alignItems: "center",
-    padding: 15,
-    marginLeft: 10,
-    fontSize: 18,
-  },
-  /*
-  analysis: {
     flex: 1,
     textAlign: "left",
     alignItems: "center",
@@ -220,15 +218,6 @@ const styles = StyleSheet.create({
     flex: 2,
     textAlign: "left",  
     alignItems: "center",
-    fontSize: 20,
-  },
-  */
-  result: {
-    flex: 2,
-    textAlign: "left",  
-    alignItems: "center",
-    padding: 15,
-    marginLeft: 10,
     fontSize: 20,
   },
   btn: {
@@ -241,15 +230,12 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     width: 200,
     borderRadius: 10,
-    //elevation: 5,
   },
-  /*
   dateText: {
     justifyContent: 'flex-end',
     marginLeft: 25,
     color: '#ced0ce',
   },
-  */
 });
 
 export default HistoryScreen;

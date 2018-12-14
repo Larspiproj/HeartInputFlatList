@@ -1,9 +1,17 @@
 import React from 'react'
-import { ScrollView, KeyboardAvoidingView, Keyboard, Alert, AsyncStorage,
+import { Image, ScrollView, KeyboardAvoidingView, Keyboard, Alert, AsyncStorage,
    TouchableOpacity, TextInput, StyleSheet, Text, View, DatePickerAndroid }
    from 'react-native';
+   
+//import header from '../styles/header.js';
+import { AntDesign } from '@expo/vector-icons';
+
+//import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default class App extends React.Component {
+  static navigationOptions = {
+    header: null,  
+  };
   constructor(props) {
     super(props);
     this.state= {
@@ -222,14 +230,29 @@ export default class App extends React.Component {
   render() {
     console.log("TextInputScreen render executed");
     return(
-      <KeyboardAvoidingView behavior='padding' style={styles.wrapper}>
-        <ScrollView contentContainerStyle={styles.contentContainer}>
+      <KeyboardAvoidingView behavior='padding' style={styles.Container}>
+        <ScrollView stickyHeaderIndices={[0]}
+            contentContainerStyle={styles.contentContainer}>
           <View style={styles.headerContainer}>
-            <Text style={styles.header}>-Input values-</Text>
-            <Text style = {{fontSize: 16, fontWeight: 'bold', color: '#fff',
-              marginBottom: 30}}>
-              Swipe up to see all inputfields
-            </Text>
+            <View style={styles.innerHeaderContainer}>
+              <View style={styles.headerLeft}>
+                <Image
+                  source={require('../images/heart.jpeg')}
+                  style={{ width: 32, height: 30 }}  
+                />
+              </View>
+              <View style={styles.headerCenter}>
+                <Text style={{fontSize: 18}}>Ange värden</Text>
+              </View>
+              <View style={styles.headerRight}>
+                <TouchableOpacity
+                  onPress={() => this.props.navigation.navigate('InputsHelp')}>
+                  <Text>
+                  <AntDesign name="question" size={30} />
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
           <View style={styles.middleContainer}>
             <TextInput
@@ -413,53 +436,67 @@ export default class App extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
+  Container: {
     flex: 1,
+    //flexDirection: 'row',
     marginTop: 30,
     //alignItems: 'stretch',
     //backgroundColor: '#fdfdfd',
+    //backgroundColor: 'red',
   },
   contentContainer: {
     //flex: 1,
-    //paddingVertical: 20,
+    //paddingVertical: 50,
     //alignItems: 'stretch',
     //justifyContent: 'center',
     //backgroundColor: '#2896d3',
     //backgroundColor: '#990000',
-    backgroundColor: '#fdfdfd',
+    //backgroundColor: '#fdfdfd',
     //paddingLeft: 40,
     //paddingRight: 40,    
   },
   headerContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f2f2f2',  
+    //flex: 3,
+    //flexDirection: 'row',
+    backgroundColor: '#f2f2f2',
+    borderBottomWidth: 2,
+    borderBottomColor: '#ff0000',
   },
-  topContainer: {
-    flex: 1,
+  innerHeaderContainer: {
+    //flex: 1,
+    flexDirection: 'row',
+    height: 70,
+  },
+  headerLeft: {
+    flex:1,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    marginLeft: 20,
+    //backgroundColor: 'red'
+  },
+  headerCenter: {
+    flex:3, 
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fdfdfd',
-    //marginBottom: 20,
-    //borderBottomWidth: 1,
-    //borderBottomColor: '#990000',
+    marginLeft: 20,
+    //backgroundColor: 'blue'
+  },
+  headerRight: {
+    flex:1, 
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    marginRight: 20,
+    //backgroundColor: 'green'
   },
   middleContainer: {
-    flex:4,
-    alignItems: 'stretch',  
-  },
-  header: {
-    fontSize: 24,
-    marginBottom: 10,
-    color: '#fdfdfd',
-    fontWeight: 'bold',    
+    flex: 7,
+    alignItems: 'stretch', 
   },
   textInput: {
     flex: 1,
     alignSelf: 'stretch',
     padding: 10,
-    marginBottom: 20,
+    marginTop: 20,
     fontSize: 18,
     backgroundColor: '#fdfdfd',
     //width: 200,
@@ -484,9 +521,10 @@ const styles = StyleSheet.create({
     borderColor: 'red',
     padding: 10,
     alignItems: 'center',
-    marginBottom: 10,
+    margin: 10,
     //width: '70%',
     borderRadius: 10,
     fontSize: 18,
+    elevation: 2,
   },
 });

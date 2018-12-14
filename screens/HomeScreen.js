@@ -1,26 +1,13 @@
 import React, { Component } from 'react';
-import { AsyncStorage, Alert, TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import { Image, AsyncStorage, Alert, TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+
+import header from '../styles/header.js';
+import { AntDesign } from '@expo/vector-icons';
 
 class HomeScreen extends Component {
   static navigationOptions = {
     header: null  
   }
-
-  /*
-  static navigationOptions = {
-    title: 'Tracer MPPT regulator',
-    //header: null,
-    headerStyle: {
-      backgroundColor: '#f2f2f2',
-      borderBottomWidth: 0,  
-    }
-  };
-  static navigationOptions = ({navigation}) => {
-    let headerTitle = 'Tracer MPPT regulator';
-    let headerTintColor = 'red';
-    return { headerTitle, headerTintColor }
-  }
-  */
 
   constructor(props) {
     super(props);
@@ -100,7 +87,28 @@ class HomeScreen extends Component {
   render() {
     return(
       <View style={styles.container}>
-        <Text>HomeScreen</Text>
+        <View style={header.headerContainer}>
+          <View style={header.headerLeft}>
+            <Image
+              source={require('../images/heart.jpeg')}
+              style={{ width: 32, height: 30 }}  
+            />
+          </View>
+          <View style={header.headerCenter}>
+            <Text style={{fontSize: 18}}>Hjärtboken</Text>
+          </View>
+          <View style={header.headerRight}>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('HomeHelp')}>
+              <Text>
+              <AntDesign name="question" size={30} />
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.middleContainer}>
+          <Text>HomeScreen</Text>
+        </View>
       </View>
     )  
   }
@@ -121,7 +129,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f2f2f2',  
   },
   middleContainer: {
-    flex: 9,
+    flex: 7,
     justifyContent: 'center',
     alignItems: 'center',
     //backgroundColor: 'blue',  
@@ -148,17 +156,3 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
-
-
-          /*
-          <TouchableOpacity
-            underlayColor = 'white'
-            onPress={() => {
-              this.props.navigation.navigate('Data')
-            }}
-          >
-            <View style={styles.button}>
-              <Text style={styles.buttonText}>Show Data</Text>
-            </View>
-          </TouchableOpacity>
-          */

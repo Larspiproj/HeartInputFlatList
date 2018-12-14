@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { ActivityIndicator, AsyncStorage, TouchableOpacity, FlatList, StyleSheet,
+import { Image, ActivityIndicator, AsyncStorage, TouchableOpacity, FlatList, StyleSheet,
         Text, View } from 'react-native';
+
+import header from '../styles/header.js';
+import { AntDesign } from '@expo/vector-icons';
 
 class FlatListScreen extends Component {
   static navigationOptions = {
     header: null  
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -105,17 +108,23 @@ class FlatListScreen extends Component {
     }
     return (
       <View style={styles.container}>
-        <View style={styles.topContainer}>
-          <View style={styles.header}>
-            <View style={styles.headerLeft}>
-              <Text>col1</Text>
-            </View>
-            <View style={styles.headerCenter}>
-              <Text style={{fontSize: 18}}>Analysis</Text>
-            </View>
-            <View style={styles.headerRight}>
-              <Text>col3</Text>
-            </View>
+        <View style={header.headerContainer}>
+          <View style={header.headerLeft}>
+            <Image
+              source={require('../images/heart.jpeg')}
+              style={{ width: 32, height: 30 }}  
+            />
+          </View>
+          <View style={header.headerCenter}>
+            <Text style={{fontSize: 18}}>Senaste värden</Text>
+          </View>
+          <View style={header.headerRight}>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('Help')}>
+              <Text>
+              <AntDesign name="question" size={30} />
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.flatListContainer}>
@@ -141,9 +150,9 @@ class FlatListScreen extends Component {
                 //backgroundColor: this.props.index % 2 == 0 ? '#fdfdfd' : '#990000'  
               }}>
                 <View style={styles.rowsContainer}>
-                  <Text style={[styles.flatListItem, styles.analysis]}>
+                  <Text style={styles.analysis}>
                     {item.analysis}</Text>
-                  <Text style={[styles.flatListItem, styles.result]}>
+                  <Text style={styles.result}>
                     {item.result}</Text>
                 </View>
               </View>
@@ -164,16 +173,18 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     //justifyContent: 'flex-end',
   },
-  topContainer: {
+  /*
+  headerContainer: {
     flex: 1,
+    flexDirection: 'row',
     backgroundColor: '#f2f2f2',
     borderBottomWidth: 2,
     borderBottomColor: '#ff0000',
   },
-  header: {
-    flex: 1,
-    flexDirection: 'row',  
-  },
+  //header: {
+    //flex: 1,
+    //flexDirection: 'row',  
+  //},
   headerLeft: {
     flex:1,
     justifyContent: 'center',
@@ -190,15 +201,10 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     marginRight: 20,
   },
+  */
   flatListContainer: {
     flex: 7,
     justifyContent: 'flex-start',
-  },
-  flatListItem: {
-    //color: "white",
-    padding: 15,
-    marginLeft: 10,
-    //fontSize: 16  
   },
   rowsContainer: {
     flex: 1,
@@ -208,12 +214,16 @@ const styles = StyleSheet.create({
     flex: 3,
     textAlign: "left",
     alignItems: "center",
+    padding: 15,
+    marginLeft: 10,
     fontSize: 18,
   },
   result: {
     flex: 2,
     textAlign: "left",  
     alignItems: "center",
+    padding: 15,
+    marginLeft: 10,
     fontSize: 20,
   },
   btn: {

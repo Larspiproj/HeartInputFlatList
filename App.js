@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Alert, Button, FlatList, ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { Icon, Alert, Button, FlatList, ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { createAppContainer, createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation';
+
+import { AntDesign } from '@expo/vector-icons';
 
 import FlatListScreen from "./screens/FlatListScreen";
 import TextInputScreen from "./screens/TextInputScreen";
@@ -8,6 +10,9 @@ import HomeScreen from "./screens/HomeScreen";
 import AnalysisScreen from "./screens/AnalysisScreen";
 import HistoryScreen from "./screens/HistoryScreen";
 import FactsScreen from "./screens/FactsScreen";
+import HelpScreen from "./screens/HelpScreen";
+import InputsHelpScreen from "./screens/InputsHelpScreen";
+import HomeHelpScreen from "./screens/HomeHelpScreen";
 
 const FlatListStack = createStackNavigator ({
   FlatList: {
@@ -21,22 +26,43 @@ const FlatListStack = createStackNavigator ({
   },
   Facts: {
     screen: FactsScreen,
-  }
+  },
+  Help: {
+    screen: HelpScreen,  
+  },
+});
+
+const TextInputStack = createStackNavigator ({
+  Inputs: {
+    screen: TextInputScreen,  
+  },
+  InputsHelp: {
+    screen: InputsHelpScreen,  
+  },
+});
+
+const HomeStack = createStackNavigator ({
+  Home: {
+    screen: HomeScreen,  
+  },
+  HomeHelp: {
+    screen: HomeHelpScreen,  
+  },
 });
 
 const AppNavigator = createMaterialTopTabNavigator ({
   Home: {
-    screen: HomeScreen
+    screen: HomeStack
   },
   Data: {
     screen: FlatListStack
   },
   Inputs: {
-    screen: TextInputScreen,
-    navigationOptions: {
+    screen: TextInputStack,
+    defaultNavigationOptions: {
       tabBarLabel: 'Inputs',
       tabBarIcon: ({tintColor}) => (
-        <Icon name="" color={tintcolor} size={24} />
+        <Icon name="form" type="AntDesign" color={tintColor} size={24} />
       )
     }
   }
@@ -53,7 +79,7 @@ const AppNavigator = createMaterialTopTabNavigator ({
       indicatorStyle: {
         height: 0  
       },
-      showIcon: false
+      showIcon: true
     }
   });
 

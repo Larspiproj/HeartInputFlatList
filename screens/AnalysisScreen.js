@@ -2,12 +2,20 @@ import React, { Component } from 'react';
 import { AsyncStorage, TouchableOpacity, StyleSheet, View, Text }
     from 'react-native';
 
+import header from '../styles/header.js';
+import { AntDesign } from '@expo/vector-icons';
+
 class AnalysisScreen extends Component {
+  static navigationOptions = {
+    header: null  
+  };
+  /*
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.getParam('analysis'),
     };
   };
+  */
 
   //_history=() => {
     //this.props.navigation.navigate('History', {
@@ -26,6 +34,27 @@ class AnalysisScreen extends Component {
     const id = navigation.getParam('id');
     return(
       <View style={styles.container}>
+        <View style={header.headerContainer}>
+          <View style={header.headerLeft}>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.goBack()}>
+              <Text>
+              <AntDesign name="left" size={30} />
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={header.headerCenter}>
+            <Text style={{fontSize: 18}}>{ analysis }</Text>
+          </View>
+          <View style={header.headerRight}>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.goBack()}>
+              <Text>
+              <AntDesign name="question" size={30} />
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
         <View style={styles.topContainer}>
           <Text>AnalysisScreen</Text>
           <Text>{ analysis }</Text>
@@ -38,14 +67,20 @@ class AnalysisScreen extends Component {
             style={styles.btn}
             onPress={() => {
               this.props.navigation.navigate('History', {
-                id: id  
+                id: id,
+                analysis: analysis, 
             });
           }}>
             <Text>History</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.btn}
-            onPress={this._facts}>
+            onPress={() => {
+              this.props.navigation.navigate('Facts', {
+                id: id,
+                analysis: analysis,
+            });
+          }}>
             <Text>Facts</Text>
           </TouchableOpacity>
         </View>
@@ -57,27 +92,30 @@ class AnalysisScreen extends Component {
 const styles = StyleSheet.create ({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginTop: 30,
+    backgroundColor: '#fdfdfd',
+    //justifyContent: 'center',
+    //alignItems: 'center',
   },
   topContainer: {
-    flex: 1,
-    //alignItems: 'center',
+    flex: 3,
+    alignItems: 'center',
     justifyContent: 'center',
   },
   bottomContainer: {
     flex: 3,
-    //alignItems: 'center',
+    alignItems: 'center',
     justifyContent: 'center',
   },
   btn: {
-    alignSelf: 'center',
+    //alignSelf: 'center',
     backgroundColor: '#ff0000',
     padding: 10,
     alignItems: 'center',
     marginBottom: 30,
     width: 200,
-    borderRadius: 5,  
+    borderRadius: 5,
+    elevation: 2,
   },
 });
 
