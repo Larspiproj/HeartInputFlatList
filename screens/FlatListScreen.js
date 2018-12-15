@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
-import { Image, ActivityIndicator, AsyncStorage, TouchableOpacity, FlatList, StyleSheet,
+import { Alert, Image, ActivityIndicator, AsyncStorage, TouchableOpacity, FlatList, StyleSheet,
         Text, View } from 'react-native';
 
 import header from '../styles/header.js';
 import { AntDesign } from '@expo/vector-icons';
 
 class FlatListScreen extends Component {
-  static navigationOptions = {
-    header: null  
-  };
 
   constructor(props) {
     super(props);
@@ -54,6 +51,31 @@ class FlatListScreen extends Component {
         const latestKey = await AsyncStorage.getItem('latestKey');
         if (!latestKey) {
           //alert("No values to show yet");
+          this.setState ({
+            isLoading: false,
+            refreshing: false,  
+            dataSource: [{analysis: "No data yet.", result: "Go to inputs", id: 0}],
+          });
+        } else {
+          const latestValues = await AsyncStorage.getItem(latestKey.toString());
+          const dataSource = JSON.parse(latestValues);
+          this.setState ({
+            isLoading: false,
+            refreshing: false,
+            dataSource: dataSource,  
+          });
+        }
+    }
+
+    catch(error) {
+      console.log("error _latestAnalysis: ", error);  
+    }
+  };
+
+  _latestAnalysis = async() => {
+    try {
+        const latestKey = await AsyncStorage.getItem('latestKey');
+        if (!latestKey) {
           this.setState ({
             isLoading: false,
             refreshing: false,  
@@ -129,6 +151,7 @@ class FlatListScreen extends Component {
         </View>
         <View style={styles.flatListContainer}>
           <FlatList
+            ListEmptyComponent={() => Alert.alert("No Data")}
             data={this.state.dataSource}
             keyExtractor={item => item.id.toString()}
             ItemSeparatorComponent={this._renderSeparator}
@@ -173,35 +196,6 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     //justifyContent: 'flex-end',
   },
-  /*
-  headerContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: '#f2f2f2',
-    borderBottomWidth: 2,
-    borderBottomColor: '#ff0000',
-  },
-  //header: {
-    //flex: 1,
-    //flexDirection: 'row',  
-  //},
-  headerLeft: {
-    flex:1,
-    justifyContent: 'center',
-    marginLeft: 20,
-  },
-  headerCenter: {
-    flex:1, 
-    justifyContent: 'center',
-    marginLeft: 20,
-  },
-  headerRight: {
-    flex:1, 
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    marginRight: 20,
-  },
-  */
   flatListContainer: {
     flex: 7,
     justifyContent: 'flex-start',

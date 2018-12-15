@@ -6,24 +6,23 @@ import header from '../styles/header.js';
 import { AntDesign } from '@expo/vector-icons';
 
 class AnalysisScreen extends Component {
-  static navigationOptions = {
-    header: null  
-  };
-  /*
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: navigation.getParam('analysis'),
-    };
-  };
-  */
 
-  //_history=() => {
-    //this.props.navigation.navigate('History', {
-      //id: { id }  
-    //});
+  componentDidMount() {
+    console.log("AnalysisScreen componentDidMount");
+    this._displayTargetValue()  
+  };
 
   _facts=() => {
     this.props.navigation.navigate('Facts');  
+  };
+
+  _displayTargetValue = async() => {
+    try {
+      const targetValue = await AsyncStorage.getItem('kolesterol');
+      console.log("targetValue: ", targetValue);
+    } catch(error) {
+      console.log("error _displayTargetValues: ", error);  
+    };  
   };
 
   render() {

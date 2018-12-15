@@ -1,27 +1,23 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, StyleSheet, View, Text } from 'react-native';
+import { Image, TouchableOpacity, StyleSheet, View, Text } from 'react-native';
 
 import header from '../styles/header.js';
 import { AntDesign } from '@expo/vector-icons';
 
-class FactsScreen extends Component {
+class HartBookScreen extends Component {
 
   render() {
-    const { navigation } = this.props;
-    const analysis = navigation.getParam('analysis');
     return(
       <View style={styles.container}>
         <View style={header.headerContainer}>
           <View style={header.headerLeft}>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.goBack()}>
-              <Text>
-              <AntDesign name="left" size={30} />
-              </Text>
-            </TouchableOpacity>
+            <Image
+              source={require('../images/heart.jpeg')}
+              style={{ width: 32, height: 30 }}
+            />
           </View>
           <View style={header.headerCenter}>
-            <Text style={{fontSize: 18}}>{ analysis }</Text>
+            <Text style={{fontSize: 18}}>Hjärtboken</Text>
           </View>
           <View style={header.headerRight}>
             <TouchableOpacity
@@ -33,7 +29,16 @@ class FactsScreen extends Component {
           </View>
         </View>
         <View style={styles.topContainer}>
-          <Text>FactsScreen</Text>
+          <Text>HartBookScreen</Text>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => {
+              this.props.navigation.navigate('Chapter1', {
+                chapter: 'Chapter1',
+              });
+            }}>
+            <Text>Chapter1</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );  
@@ -53,6 +58,16 @@ const styles = StyleSheet.create ({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  btn: {
+    //alignSelf: 'center',
+    backgroundColor: '#ff0000',
+    padding: 10,
+    alignItems: 'center',
+    marginBottom: 30,
+    width: 200,
+    borderRadius: 5,
+    elevation: 2,
+  },
 });
 
-export default FactsScreen;
+export default HartBookScreen;

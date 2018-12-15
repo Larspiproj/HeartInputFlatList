@@ -5,9 +5,6 @@ import header from '../styles/header.js';
 import { AntDesign } from '@expo/vector-icons';
 
 class HomeScreen extends Component {
-  static navigationOptions = {
-    header: null  
-  }
 
   constructor(props) {
     super(props);
@@ -95,7 +92,7 @@ class HomeScreen extends Component {
             />
           </View>
           <View style={header.headerCenter}>
-            <Text style={{fontSize: 18}}>Hjärtboken</Text>
+            <Text style={{fontSize: 18}}>Hjärtboken Hem</Text>
           </View>
           <View style={header.headerRight}>
             <TouchableOpacity
@@ -117,7 +114,7 @@ class HomeScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 25,
+    marginTop: 30,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fdfdfd'

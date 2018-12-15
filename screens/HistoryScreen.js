@@ -5,9 +5,6 @@ import header from '../styles/header.js';
 import { AntDesign } from '@expo/vector-icons';
 
 class HistoryScreen extends Component {
-  static navigationOptions = {
-    header: null,  
-  };
 
   constructor(props) {
     super(props);
@@ -64,7 +61,7 @@ class HistoryScreen extends Component {
         });
         for(var i = 0; i < values.length; i++) {
           let date = values[i][0];
-          let parameter = values[i][this.state.id%9];
+          let parameter = values[i][this.state.id%10];
           history.push(parameter);
         }
         const dataSource = history;

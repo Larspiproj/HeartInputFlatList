@@ -4,11 +4,11 @@ import { TouchableOpacity, StyleSheet, View, Text } from 'react-native';
 import header from '../styles/header.js';
 import { AntDesign } from '@expo/vector-icons';
 
-class FactsScreen extends Component {
+class Chapter1Screen extends Component {
 
   render() {
     const { navigation } = this.props;
-    const analysis = navigation.getParam('analysis');
+    const chapter = navigation.getParam('chapter');
     return(
       <View style={styles.container}>
         <View style={header.headerContainer}>
@@ -21,7 +21,7 @@ class FactsScreen extends Component {
             </TouchableOpacity>
           </View>
           <View style={header.headerCenter}>
-            <Text style={{fontSize: 18}}>{ analysis }</Text>
+            <Text style={{fontSize: 18}}>{ chapter }</Text>
           </View>
           <View style={header.headerRight}>
             <TouchableOpacity
@@ -33,7 +33,7 @@ class FactsScreen extends Component {
           </View>
         </View>
         <View style={styles.topContainer}>
-          <Text>FactsScreen</Text>
+          <Text>Chapter1Screen</Text>
         </View>
       </View>
     );  
@@ -55,4 +55,4 @@ const styles = StyleSheet.create ({
   },
 });
 
-export default FactsScreen;
+export default Chapter1Screen;

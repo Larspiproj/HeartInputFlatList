@@ -6,9 +6,7 @@ import { Image, ScrollView, KeyboardAvoidingView, Keyboard, Alert, AsyncStorage,
 //import header from '../styles/header.js';
 import { AntDesign } from '@expo/vector-icons';
 
-//import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
-class FlatListScreen extends Component {
+class TargetValuesScreen extends Component {
   constructor(props) {
     super(props);
     this.state= {
@@ -35,182 +33,31 @@ class FlatListScreen extends Component {
     this.inputs[field].focus();  
   }
 
-  componentDidMount() {
-    console.log("TextInputScreen componentDidMount");
-    this._initialState().done();
-  }
-
   componentDidUpdate() {
-    console.log("TextInputScreen componentDidUpdate");
-  }
-
-  _initialState = async() =>{
-    try {
-      const nextKey = await AsyncStorage.getItem('nextKey');
-      if (!nextKey) {
-        await AsyncStorage.multiSet([['nextKey', JSON.stringify(0)],
-          ['nextId', JSON.stringify(0)]])
-        .then(() =>  
-          this.setState ({
-            id: 0,
-            key: 0,
-          }));
-      console.log("key and id set to: ", this.state.key, this.state.id);
-      }
-    }
-    catch(error) {
-      console.log("error _initialState: ", error);  
-    }  
-  }
-
-  _saveInputs = async(key, value) => {
-    try {
-      await AsyncStorage.setItem(key, value);
-    }
-    catch(error) {
-      console.log("error _saveInputs: ", error);  
-    }  
-  }
-
-  _saveNextKey = async(nextKey) => {
-    try {
-      await AsyncStorage.setItem('nextKey', JSON.stringify(nextKey));  
-    }
-    catch(error) {
-      console.log("error _saveNextKey: ", error);  
-    }
-  }
-
-  _saveNextId = async(nextId) => {
-    try {
-      await AsyncStorage.setItem('nextId', JSON.stringify(nextId));  
-    }
-    catch(error) {
-      console.log("error _saveNextId: ", error);  
-    }
-  }
-
-  _getNextKey = async() => {
-    try {
-      const key = await AsyncStorage.getItem('nextKey')
-      .then((key) =>
-      this.setState({'key': JSON.parse(key)})) 
-    }
-    catch(error) {
-      console.log("error _getNextKey: ", error);  
-    }
-  }
-
-  _getNextId = async() => {
-    try {
-      const id = await AsyncStorage.getItem('nextId')
-      .then((id) =>
-      this.setState({'id': JSON.parse(id)})) 
-    }
-    catch(error) {
-      console.log("error _getNextId: ", error);  
-    }
-  }
-
-  _saveLatestKey = async() => {
-    try {
-      await AsyncStorage.setItem('latestKey', JSON.stringify(this.state.key));
-    }
-    catch(error) {
-      console.log("error _saveLatestKey: ", error);
-    }  
+    console.log("TargetValuesScreen DidUpdate");  
   }
 
   _submit = async() => {
     try {
+      const targetValues = [
+        ['date', JSON.stringify(this.state.date)],
+        ['kolesterol', JSON.stringify(this.state.kolesterol)],
+        ['LDL-kolesterol', JSON.stringify(this.state.LDL-kolesterol)],
+        ['HDL-kolesterol', JSON.stringify(this.state.HDL-kolesterol)],
+        ['triglycerider', JSON.stringify(this.state.triglycerider)],
+        ['apolipoproteiner', JSON.stringify(this.state.apolipoproteiner)],
+        ['bloodpressure', JSON.stringify(this.state.bloodpressure)],
+        ['HbA1c-bloodsugar', JSON.stringify(this.state.bloodsugar)],
+        ['waist', JSON.stringify(this.state.waist)],
+        ['vikt', JSON.stringify(this.state.vikt)],  
+      ];
 
-      await this._getNextKey();
-      await this._getNextId();
-      console.log("1 this.state.key, id: ", this.state.key, this.state.id);
-
-      const inputs = [
-        {"id": this.state.id, "analysis": "date", "result": this.state.date},
-        {"id": this.state.id+1, "analysis": "kolesterol",
-        "result": this.state.kolesterol, "date": this.state.date},
-        {"id": this.state.id+2, "analysis": "LDL_kolesterol",
-        "result": this.state.LDL_kolesterol, "date": this.state.date},
-        {"id": this.state.id+3, "analysis": "HDL_kolesterol",
-        "result": this.state.HDL_kolesterol, "date": this.state.date},
-        {"id": this.state.id+4, "analysis": "triglycerider",
-        "result": this.state.triglycerider, "date": this.state.date},
-        {"id": this.state.id+5, "analysis": "apolipoproteiner",
-        "result": this.state.apolipoproteiner, "date": this.state.date},
-        {"id": this.state.id+6, "analysis": "bloodpressure",
-        "result": this.state.bloodpressure, "date": this.state.date},
-        {"id": this.state.id+7, "analysis": "HbA1c_bloodsugar",
-        "result": this.state.HbA1c_bloodsugar, "date": this.state.date},
-        {"id": this.state.id+8, "analysis": "waist", "result": this.state.waist,
-        "date": this.state.date},
-        {"id": this.state.id+9, "analysis": "vikt", "result": this.state.vikt,
-        "date": this.state.date},
-      ]
-        console.log("2 inputs: ", inputs);
-        console.log("3 key and id: ", this.state.key, this.state.id);
-
-      await this._saveInputs(this.state.key.toString(), JSON.stringify(inputs));
-      await this._saveLatestKey();
-
-      const nextKey = (this.state.key + 1);
-      console.log("4 nextKey: ", nextKey);
-      const nextId = (this.state.id += 10);
-      console.log("4 nextId: ", nextId);
-      await this._saveNextKey(nextKey)
-      await this._saveNextId(nextId)
-      .then(() =>
-        this.setState({
-          key: null,
-          id: null,
-          date: "",
-          kolesterol: "",
-          LDL_kolesterol: "",
-          HDL_kolesterol: "",
-          triglycerider: "",
-          apolipoproteiner: "",
-          bloodpressure: "",
-          HbA1c_bloodsugar: "",
-          waist: "",
-          vikt: "",
-        }));
-      console.log("5 key and id: ", this.state.key, this.state.id);
-      Alert.alert('Data submitted');
+      await AsyncStorage.multiSet(targetValues);
+        
     } catch(error) {
-        console.log("error _submit: ", error);  
-    }
-  }
-
-  _confirmRemoveData = () => {
-    Alert.alert(
-      'Raderar alla värden!',
-      'Är det säkert du vill fortsätta?',
-      [
-        {text: 'Avbryt'},
-        {text: 'Radera', onPress: () => this._removeData()},
-      ],
-      { cancelable: false }
-    );  
-  }
-
-  _removeData = async() => {
-    try {
-      const keys = await AsyncStorage.getAllKeys();
-      if (keys.length === 0) {
-        console.log("Keys to remove empty");  
-        alert("Nothing to delete");
-      }
-      console.log("Keys to remove: ", keys);
-      await AsyncStorage.multiRemove(keys);
-      this._initialState();
-      Alert.alert('Data removed');
-    }
-    catch(error) {
-      alert(error);
-    } 
-  }
+      console.log("error _submit: ", error);  
+    }  
+  };
 
   _datePicker = async() => {
     try {
@@ -237,17 +84,19 @@ class FlatListScreen extends Component {
           <View style={styles.headerContainer}>
             <View style={styles.innerHeaderContainer}>
               <View style={styles.headerLeft}>
-                <Image
-                  source={require('../images/heart.jpeg')}
-                  style={{ width: 32, height: 30 }}  
-                />
+                <TouchableOpacity
+                  onPress={() => this.props.navigation.goBack()}>
+                  <Text>
+                  <AntDesign name="left" size={30} />
+                  </Text>
+                </TouchableOpacity>
               </View>
               <View style={styles.headerCenter}>
-                <Text style={{fontSize: 18}}>Dina värden</Text>
+                <Text style={{fontSize: 18}}>Målvärden</Text>
               </View>
               <View style={styles.headerRight}>
                 <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate('InputsHelp')}>
+                  onPress={() => this.props.navigation.navigate('TargetValuesHelp')}>
                   <Text>
                   <AntDesign name="question" size={30} />
                   </Text>
@@ -277,7 +126,7 @@ class FlatListScreen extends Component {
 
             <TextInput
               style={styles.textInput}
-              placeholder='kolesterol'
+              placeholder='målvärde kolesterol'
               placeholderTextColor='#ced0ce'
               value={this.state.kolesterol}
               //onEndEditing={this._submit}
@@ -295,7 +144,7 @@ class FlatListScreen extends Component {
 
             <TextInput
               style={styles.textInput}
-              placeholder='LDL-kolesterol'
+              placeholder='målvärde LDL-kolesterol'
               placeholderTextColor='#ced0ce'
               value={this.state.LDL_kolesterol}
               //onEndEditing={this._submit}
@@ -313,7 +162,7 @@ class FlatListScreen extends Component {
 
             <TextInput
               style={styles.textInput}
-              placeholder='HDL-kolesterol'
+              placeholder='målvärde HDL-kolesterol'
               placeholderTextColor='#ced0ce'
               value={this.state.HDL_kolesterol}
               //onEndEditing={this._submit}
@@ -331,7 +180,7 @@ class FlatListScreen extends Component {
 
             <TextInput
               style={styles.textInput}
-              placeholder='triglycerider'
+              placeholder='målvärde triglycerider'
               placeholderTextColor='#ced0ce'
               value={this.state.triglycerider}
               //onEndEditing={this._submit}
@@ -349,7 +198,7 @@ class FlatListScreen extends Component {
 
             <TextInput
               style={styles.textInput}
-              placeholder='apolipoproteiner'
+              placeholder='målvärde apolipoproteiner'
               placeholderTextColor='#ced0ce'
               value={this.state.apolipoproteiner}
               //onEndEditing={this._submit}
@@ -367,7 +216,7 @@ class FlatListScreen extends Component {
 
             <TextInput
               style={styles.textInput}
-              placeholder='bloodpressure'
+              placeholder='målvärde bloodpressure'
               placeholderTextColor='#ced0ce'
               value={this.state.bloodpressure}
               //onEndEditing={this._submit}
@@ -385,7 +234,7 @@ class FlatListScreen extends Component {
 
             <TextInput
               style={styles.textInput}
-              placeholder='HbA1c-bloodsugar'
+              placeholder='målvärde HbA1c-bloodsugar'
               placeholderTextColor='#ced0ce'
               value={this.state.HbA1c_bloodsugar}
               //onEndEditing={this._submit}
@@ -403,7 +252,7 @@ class FlatListScreen extends Component {
 
             <TextInput
               style={styles.textInput}
-              placeholder='waist'
+              placeholder='målvärde waist'
               placeholderTextColor='#ced0ce'
               value={this.state.waist}
               //onEndEditing={this._submit}
@@ -421,7 +270,7 @@ class FlatListScreen extends Component {
 
             <TextInput
               style={styles.textInput}
-              placeholder='vikt'
+              placeholder='målvärde vikt'
               placeholderTextColor='#ced0ce'
               value={this.state.vikt}
               //onEndEditing={this._submit}
@@ -438,13 +287,7 @@ class FlatListScreen extends Component {
             <TouchableOpacity
               style={styles.btn}
               onPress={this._submit}>
-              <Text>Spara dina värden</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.btn}
-              onPress={() => this.props.navigation.navigate('TargetValues')}>
-              <Text>Skriv in nya målvärden</Text>
+              <Text>Spara målvärden</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -545,4 +388,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FlatListScreen;
+export default TargetValuesScreen;

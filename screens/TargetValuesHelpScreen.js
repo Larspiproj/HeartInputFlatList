@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { TouchableOpacity, StyleSheet, View, Text } from 'react-native';
 
 import header from '../styles/header.js';
-import { AntDesign } from '@expo/vector-icons';
+import { Ionicons, AntDesign } from '@expo/vector-icons';
 
-class FactsScreen extends Component {
+class TargetValuesHelpScreen extends Component {
 
   render() {
-    const { navigation } = this.props;
-    const analysis = navigation.getParam('analysis');
+    //const { navigation } = this.props;
+    //const analysis = navigation.getParam('analysis');
     return(
       <View style={styles.container}>
         <View style={header.headerContainer}>
@@ -21,19 +21,13 @@ class FactsScreen extends Component {
             </TouchableOpacity>
           </View>
           <View style={header.headerCenter}>
-            <Text style={{fontSize: 18}}>{ analysis }</Text>
+            <Text style={{fontSize: 18}}>Hjälp</Text>
           </View>
           <View style={header.headerRight}>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.goBack()}>
-              <Text>
-              <AntDesign name="question" size={30} />
-              </Text>
-            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.topContainer}>
-          <Text>FactsScreen</Text>
+          <Text>TargetValuesHelpScreen</Text>
         </View>
       </View>
     );  
@@ -55,4 +49,4 @@ const styles = StyleSheet.create ({
   },
 });
 
-export default FactsScreen;
+export default TargetValuesHelpScreen;

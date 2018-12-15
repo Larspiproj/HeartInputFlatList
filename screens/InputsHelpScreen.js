@@ -5,9 +5,6 @@ import header from '../styles/header.js';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 
 class InputsHelpScreen extends Component {
-  static navigationOptions = {
-    header: null,  
-  };
 
   render() {
     //const { navigation } = this.props;
@@ -24,15 +21,9 @@ class InputsHelpScreen extends Component {
             </TouchableOpacity>
           </View>
           <View style={header.headerCenter}>
-            <Text style={{fontSize: 18}}>InputsHelpScreen</Text>
+            <Text style={{fontSize: 18}}>Hjälp</Text>
           </View>
           <View style={header.headerRight}>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.goBack()}>
-              <Text>
-              <AntDesign name="question" size={30} />
-              </Text>
-            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.topContainer}>

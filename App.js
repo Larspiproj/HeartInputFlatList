@@ -13,63 +13,105 @@ import FactsScreen from "./screens/FactsScreen";
 import HelpScreen from "./screens/HelpScreen";
 import InputsHelpScreen from "./screens/InputsHelpScreen";
 import HomeHelpScreen from "./screens/HomeHelpScreen";
+import TargetValuesScreen from "./screens/TargetValuesScreen";
+import HartBookScreen from "./screens/HartBookScreen";
+import Chapter1Screen from "./screens/Chapter1Screen";
+import TargetValuesHelpScreen from "./screens/TargetValuesHelpScreen";
 
-const FlatListStack = createStackNavigator ({
-  FlatList: {
-    screen: FlatListScreen, 
-  },
-  Analysis: {
-    screen: AnalysisScreen, 
-  },
-  History: {
-    screen: HistoryScreen,
-  },
-  Facts: {
-    screen: FactsScreen,
-  },
-  Help: {
-    screen: HelpScreen,  
-  },
-});
-
-const TextInputStack = createStackNavigator ({
-  Inputs: {
-    screen: TextInputScreen,  
-  },
-  InputsHelp: {
-    screen: InputsHelpScreen,  
-  },
-});
-
-const HomeStack = createStackNavigator ({
-  Home: {
-    screen: HomeScreen,  
-  },
-  HomeHelp: {
-    screen: HomeHelpScreen,  
-  },
-  },
+const HomeStack = createStackNavigator (
   {
-    navigationOptions: {
-      tabBarLabel: 'Test',
-    }
-  }
-);
-
-const AppNavigator = createMaterialTopTabNavigator ({
-  Home: {
-    screen: HomeStack
-  },
-  Data: {
-    screen: FlatListStack
-  },
-  Inputs: {
-    screen: TextInputStack,
-  },
+    Home: HomeScreen,
+    HomeHelp: HomeHelpScreen,  
   },
   {
     defaultNavigationOptions: {
+      header: null
     },
+    navigationOptions: {
+      tabBarLabel: 'Hem',  
+    },
+  }
+);
+
+const HartBookStack = createStackNavigator (
+  {
+    HartBook: HartBookScreen,
+    Chapter1: Chapter1Screen,  
+  },
+  {
+    defaultNavigationOptions: {
+      header: null
+    },
+    navigationOptions: {
+      tabBarLabel: 'Hjärtbok',  
+    },
+  }
+);
+
+const FlatListStack = createStackNavigator (
+  {
+    FlatList: FlatListScreen, 
+    Analysis: AnalysisScreen, 
+    History: HistoryScreen,
+    Facts: FactsScreen,
+    Help: HelpScreen,  
+  },
+  {
+    defaultNavigationOptions: {
+      header: null
+    },
+    navigationOptions: {
+      tabBarLabel: 'Värden',
+    },
+  }
+);
+
+const TextInputStack = createStackNavigator (
+  {
+    Inputs: TextInputScreen,  
+    InputsHelp: InputsHelpScreen,  
+    TargetValues: TargetValuesScreen,
+    TargetValuesHelp: TargetValuesHelpScreen,
+  },
+  {
+    defaultNavigationOptions: {
+      header: null
+    },
+    navigationOptions: {
+      tabBarLabel: 'Skriv In',
+    },
+  }
+);
+
+const AppNavigator = createMaterialTopTabNavigator (
+  {
+    Home: HomeStack,
+    HartBook: HartBookStack,
+    Data: FlatListStack,
+    Inputs: TextInputStack,
+  },
+  {
+    defaultNavigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ focused, horizontal, tintColor }) => {
+        const { routeName } = navigation.state;
+        let iconName;
+        switch(routeName) {
+          case 'Home':
+            iconName = 'home';
+            break;
+          case 'HartBook':
+            iconName = 'book';
+            break;
+          case 'Data':
+            iconName = 'profile';
+            break;
+          case 'Inputs':
+            iconName = 'form';
+            break;  
+        }
+        return <AntDesign name={iconName} size={16} color={tintColor} />;
+      },
+    }),
     tabBarPosition: 'bottom',
     swipeEnabled: true,
     animationEnabled: true,
@@ -82,13 +124,15 @@ const AppNavigator = createMaterialTopTabNavigator ({
       indicatorStyle: {
         height: 0  
       },
-      showIcon: true
+      showIcon: true,
+      upperCaseLabel: false,
+      labelStyle: {
+        fontSize: 12,  
+      },
+      tabStyle: {
+        //height: 50,  
+      },
     },
-    navigationOptions: { 
-      tabBarIcon: ({tintColor}) => (
-        <Icon name="form" type="AntDesign" color={tintColor} size={24} />
-      )
-    }
   }
 );
 
