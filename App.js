@@ -48,7 +48,13 @@ const HomeStack = createStackNavigator ({
   HomeHelp: {
     screen: HomeHelpScreen,  
   },
-});
+  },
+  {
+    navigationOptions: {
+      tabBarLabel: 'Test',
+    }
+  }
+);
 
 const AppNavigator = createMaterialTopTabNavigator ({
   Home: {
@@ -59,14 +65,11 @@ const AppNavigator = createMaterialTopTabNavigator ({
   },
   Inputs: {
     screen: TextInputStack,
+  },
+  },
+  {
     defaultNavigationOptions: {
-      tabBarLabel: 'Inputs',
-      tabBarIcon: ({tintColor}) => (
-        <Icon name="form" type="AntDesign" color={tintColor} size={24} />
-      )
-    }
-  }
-}, {
+    },
     tabBarPosition: 'bottom',
     swipeEnabled: true,
     animationEnabled: true,
@@ -80,8 +83,14 @@ const AppNavigator = createMaterialTopTabNavigator ({
         height: 0  
       },
       showIcon: true
+    },
+    navigationOptions: { 
+      tabBarIcon: ({tintColor}) => (
+        <Icon name="form" type="AntDesign" color={tintColor} size={24} />
+      )
     }
-  });
+  }
+);
 
 const AppContainer = createAppContainer(AppNavigator);
 
