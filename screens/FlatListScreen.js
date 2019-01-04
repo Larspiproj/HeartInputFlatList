@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Alert, Image, ActivityIndicator, AsyncStorage, TouchableOpacity, FlatList, StyleSheet,
-        Text, View } from 'react-native';
+import { Alert, Image, ActivityIndicator, AsyncStorage, TouchableOpacity,
+        FlatList, StyleSheet, Text, View } from 'react-native';
 
+//import FocusStateLabel from './withNavigationFocus';
 import header from '../styles/header.js';
 import { AntDesign } from '@expo/vector-icons';
 
@@ -44,7 +45,6 @@ class FlatListScreen extends Component {
       console.log("error _initialState: ", error);  
     }
   }
-  */
 
   _latestAnalysis = async() => {
     try {
@@ -71,6 +71,7 @@ class FlatListScreen extends Component {
       console.log("error _latestAnalysis: ", error);  
     }
   };
+  */
 
   _latestAnalysis = async() => {
     try {
@@ -121,6 +122,7 @@ class FlatListScreen extends Component {
 
   render() {
     console.log("FlatListScreen render executed");
+    //console.log("dataSource from FlatListScreen: ", this.state.dataSource);
     if(this.state.isLoading) {
       return(
         <View style={{flex: 1, padding: 50}}>
@@ -151,7 +153,7 @@ class FlatListScreen extends Component {
         </View>
         <View style={styles.flatListContainer}>
           <FlatList
-            ListEmptyComponent={() => Alert.alert("No Data")}
+            //ListEmptyComponent={() => Alert.alert("No Data")}
             data={this.state.dataSource}
             keyExtractor={item => item.id.toString()}
             ItemSeparatorComponent={this._renderSeparator}
@@ -159,13 +161,14 @@ class FlatListScreen extends Component {
             onRefresh={this._handleRefresh}
             renderItem={({item}) =>
             <TouchableOpacity onPress={() => {
+              console.log("Item =", JSON.stringify(item), "index =", item.id);
               this.props.navigation.navigate('Analysis', {
                   analysis: item.analysis,
+                  key: item.key,
                   result: item.result,
                   date: this.state.dataSource[0].result,
                   id: item.id,
               });
-            console.log("dataSource from FlatListScreen: ", this.state.dataSource);
             }}
             >
               <View style={{
@@ -177,6 +180,10 @@ class FlatListScreen extends Component {
                     {item.analysis}</Text>
                   <Text style={styles.result}>
                     {item.result}</Text>
+                  <TouchableOpacity onPress={() => {
+                    Alert.alert("Button Pressed");}}>
+                    <Text>Button</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </TouchableOpacity>

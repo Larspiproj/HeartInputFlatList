@@ -1,89 +1,174 @@
-import React, { Component }from 'react'
-import { Image, ScrollView, KeyboardAvoidingView, Keyboard, Alert, AsyncStorage,
-   TouchableOpacity, TextInput, StyleSheet, Text, View, DatePickerAndroid }
-   from 'react-native';
-   
-//import header from '../styles/header.js';
+import React, { Component } from 'react';
+import { Alert, ScrollView, KeyboardAvoidingView, AsyncStorage, TextInput,
+TouchableOpacity, StyleSheet, View, Text } from 'react-native';
+
+import header from '../styles/header.js';
 import { AntDesign } from '@expo/vector-icons';
 
 class TargetValuesScreen extends Component {
   constructor(props) {
     super(props);
     this.state= {
-      key: null,
-      id: null,
-      date: "",
-      kolesterol: "",
-      LDL_kolesterol: "",
-      HDL_kolesterol: "",
-      triglycerider: "",
-      apolipoproteiner: "",
-      bloodpressure: "",
-      HbA1c_bloodsugar: "",
-      waist: "",
-      vikt: "",
+      //key: null,
+      //id: null,
+      //date: "",
+      kolesterol: "1",
+      LDL_kolesterol: "1",
+      HDL_kolesterol: "1",
+      triglycerider: "1",
+      apolipoproteiner: "1",
+      bloodpressure: "1",
+      HbA1c_bloodsugar: "1",
+      waist: "1",
+      vikt: "1",
     }
-
-    this.focusNextField = this.focusNextField.bind(this); 
-    this.inputs = {};
-
   }
 
-  focusNextField(field) {
-    this.inputs[field].focus();  
-  }
-
-  componentDidUpdate() {
-    console.log("TargetValuesScreen DidUpdate");  
-  }
-
-  _submit = async() => {
-    try {
-      const targetValues = [
-        ['date', JSON.stringify(this.state.date)],
-        ['kolesterol', JSON.stringify(this.state.kolesterol)],
-        ['LDL-kolesterol', JSON.stringify(this.state.LDL-kolesterol)],
-        ['HDL-kolesterol', JSON.stringify(this.state.HDL-kolesterol)],
-        ['triglycerider', JSON.stringify(this.state.triglycerider)],
-        ['apolipoproteiner', JSON.stringify(this.state.apolipoproteiner)],
-        ['bloodpressure', JSON.stringify(this.state.bloodpressure)],
-        ['HbA1c-bloodsugar', JSON.stringify(this.state.bloodsugar)],
-        ['waist', JSON.stringify(this.state.waist)],
-        ['vikt', JSON.stringify(this.state.vikt)],  
-      ];
-
-      await AsyncStorage.multiSet(targetValues);
-        
-    } catch(error) {
-      console.log("error _submit: ", error);  
-    }  
+  componentDidMount() {
+    //this._storeTargetValues(); 
   };
 
-  _datePicker = async() => {
-    try {
-      const {action, year, month, day} = await DatePickerAndroid.open({
-        //date: this.state.selectedDate
-        date: new Date()
-      });
-      if (action !== DatePickerAndroid.dismissedAction) {
-          const date = new Date(year, month,day);
-          //this.setState({selectedDate: date.toLocaleDateString()});
-          this.setState({date: date.toLocaleDateString()});
-      }
-    } catch ({code, message}) {
-      console.warn('Cannot open date Picker', message);  
+  _storeTargetValues = async(targetValues) => {
+    try{
+      console.log("_storeTargetValues", targetValues);
+      await AsyncStorage.multiSet(targetValues);
+    } catch(error) {
+      console.log("error _storeTargetValues: ", error);
     }
+  }
+
+  _submitData = async() => {
+    console.log("_submitData");
+    try {
+      const targetValues = [
+        ['kolesterol', this.state.kolesterol],
+        ['LDL_kolesterol', this.state.LDL_kolesterol],
+        ['HDL_kolesterol', this.state.HDL_kolesterol],
+        ['triglycerider', this.state.triglycerider],
+        ['apolipoproteiner', this.state.apolipoproteiner],
+        ['bloodpressure', this.state.bloodpressure],
+        ['HbA1c_bloodsugar', this.state.HbA1c_bloodsugar],
+        ['waist', this.state.waist],
+        ['vikt', this.state.vikt],  
+      ];
+
+      //console.log("targetValues: ", targetValues);
+
+      await this._storeTargetValues(targetValues);
+
+    } catch(error) {
+      console.log("error _storeTargetValues", error);  
+    }
+  };
+
+  _displayData = async() => {
+    try {
+        const keys = await AsyncStorage.getAllKeys();
+        console.log("keys: ", keys);
+        if (keys.length<1) {
+          console.log("keys empty");
+        }
+        let filtered = [];
+        const keyNrarray = [];
+        let keysSorted = [];
+        const values = [];
+        const keyArray = [];
+        const remove = ["nextKey", "nextId", "latestKey"]
+
+        filtered = keys.filter(
+          function(value) {
+            return this.indexOf(value) < 0;
+          },
+          remove
+        );
+
+        //filtered = keys.filter(function(value) {
+          //return value != "nextKey";  
+        //});
+        console.log("filtered: ", filtered);
+
+        keysSorted = filtered.sort(function(a, b){return a-b});
+        console.log("keysSorted: ", keysSorted);
+
+        keyNrArray = filtered.map(Number);
+        console.log("keyNrArray: ", keyNrArray);
+
+        const items = await AsyncStorage.multiGet((keysSorted), (error, stores) => {
+        stores.map((result, i, store) => {
+          //console.log("stores: ", stores);
+          //console.log("result", result);
+          //console.log("i",i);
+          //console.log("store", store);
+          let key = store[i][0];
+          //console.log("key: ", key);
+          keyArray.push(key);
+          let value = JSON.parse(store[i][1]);
+          values.push(value);
+          //console.log("value: ", value);  
+          //keyNrArray = keysSortedArray.map(Number);
+          //console.log("keyNrArray: ", keyNrArray);
+        });
+        });
+        //const latestKey = keyNrArray.slice(-1)[0];
+        //const latestKey = await AsyncStorage.getItem('latestKey');
+        //console.log("latestKey: ", latestKey);
+        console.log("keyArray: ", keyArray);
+        console.log("values: ", values);
+        console.log("state: ", this.state.kolesterol);
+
+        //const latestValues = await AsyncStorage.getItem(latestKey.toString());
+        //console.log("latest values: ", latestValues);
+        //console.log("latest parsed values: ", JSON.parse(latestValues));
+
+        //const dataSource = [JSON.parse(latestValues)];
+        //console.log("dataSource: ", dataSource);
+        //console.log("values[5]: ", values[5].kolesterol);
+    }
+
+    catch(error) {
+      console.log("error _displayData: ", error);  
+    }
+  }
+
+  _confirmRemoveData = () => {
+    Alert.alert(
+      'Raderar alla värden!',
+      'Är det säkert du vill fortsätta?',
+      [
+        {text: 'Avbryt'},
+        {text: 'Radera', onPress: () => this._removeData()},
+      ],
+      { cancelable: false }
+    );  
+  }
+
+  _removeData = async() => {
+    try {
+      const keys = await AsyncStorage.getAllKeys();
+      if (keys.length === 0) {
+        console.log("Keys to remove empty");  
+        alert("Nothing to delete");
+      }
+      console.log("Keys to remove: ", keys);
+      await AsyncStorage.multiRemove(keys);
+      this._initialState();
+      Alert.alert('Data removed');
+    }
+    catch(error) {
+      alert(error);
+    } 
   }
 
   render() {
-    console.log("TextInputScreen render executed");
+    //const { navigation } = this.props;
+    //const analysis = navigation.getParam('analysis');
     return(
-      <KeyboardAvoidingView behavior='padding' style={styles.Container}>
+      <KeyboardAvoidingView behavior='padding' style={styles.container}>
         <ScrollView stickyHeaderIndices={[0]}
             contentContainerStyle={styles.contentContainer}>
-          <View style={styles.headerContainer}>
-            <View style={styles.innerHeaderContainer}>
-              <View style={styles.headerLeft}>
+          <View style={header.headerContainer}>
+            <View style={header.innerHeaderContainer}>
+              <View style={header.headerLeft}>
                 <TouchableOpacity
                   onPress={() => this.props.navigation.goBack()}>
                   <Text>
@@ -91,12 +176,12 @@ class TargetValuesScreen extends Component {
                   </Text>
                 </TouchableOpacity>
               </View>
-              <View style={styles.headerCenter}>
+              <View style={header.headerCenter}>
                 <Text style={{fontSize: 18}}>Målvärden</Text>
               </View>
-              <View style={styles.headerRight}>
+              <View style={header.headerRight}>
                 <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate('TargetValuesHelp')}>
+                  onPress={() => this.props.navigation.goBack()}>
                   <Text>
                   <AntDesign name="question" size={30} />
                   </Text>
@@ -107,259 +192,63 @@ class TargetValuesScreen extends Component {
           <View style={styles.middleContainer}>
             <TextInput
               style={styles.textInput}
-              placeholder='date'
+              placeholder={`kolesterol ${this.state.kolesterol}`}
               placeholderTextColor='#ced0ce'
-              value={this.state.date}
-              //onEndEditing={this._submit}
-              returnKeyType='next'
-              underlineColorAndroid='#ced0ce'
-              blurOnSubmit={ false }
-              onFocus={
-                () => this._datePicker()}
-              onSubmitEditing={
-                () => this.focusNextField('kolesterol')}
-              onChangeText={
-                (date) => this.setState({date})}
-              ref={
-               (input) => this.inputs['yyyymmdd'] = input}
-            />
-
-            <TextInput
-              style={styles.textInput}
-              placeholder='målvärde kolesterol'
-              placeholderTextColor='#ced0ce'
-              value={this.state.kolesterol}
-              //onEndEditing={this._submit}
-              returnKeyType='next'
-              //underlineColorAndroid='transparent'
-              underlineColorAndroid='#ced0ce'
-              blurOnSubmit={ false }
-              onSubmitEditing={
-                () => this.focusNextField('LDL-kolesterol')}
-              onChangeText={
-                (kolesterol) => this.setState({kolesterol})}
-              ref={
-                (input) => this.inputs['kolesterol'] = input}
-            />
-
-            <TextInput
-              style={styles.textInput}
-              placeholder='målvärde LDL-kolesterol'
-              placeholderTextColor='#ced0ce'
-              value={this.state.LDL_kolesterol}
-              //onEndEditing={this._submit}
-              returnKeyType='next'
-              //underlineColorAndroid='transparent'
-              underlineColorAndroid='#ced0ce'
-              blurOnSubmit={ false }
-              onSubmitEditing={
-                () => this.focusNextField('HDL-kolesterol')}
-              onChangeText={
-                (LDL_kolesterol) => this.setState({LDL_kolesterol})}
-              ref={
-                (input) => this.inputs['LDL-kolesterol'] = input}
-            />
-
-            <TextInput
-              style={styles.textInput}
-              placeholder='målvärde HDL-kolesterol'
-              placeholderTextColor='#ced0ce'
-              value={this.state.HDL_kolesterol}
-              //onEndEditing={this._submit}
-              returnKeyType='next'
-              //underlineColorAndroid='transparent'
-              underlineColorAndroid='#ced0ce'
-              blurOnSubmit={ false }
-              onSubmitEditing={
-                () => this.focusNextField('triglycerider')}
-              onChangeText={
-                (HDL_kolesterol) => this.setState({HDL_kolesterol})}
-              ref={
-                (input) => this.inputs['HDL-kolesterol'] = input}
-            />
-
-            <TextInput
-              style={styles.textInput}
-              placeholder='målvärde triglycerider'
-              placeholderTextColor='#ced0ce'
-              value={this.state.triglycerider}
-              //onEndEditing={this._submit}
-              returnKeyType='next'
-              //underlineColorAndroid='transparent'
-              underlineColorAndroid='#ced0ce'
-              blurOnSubmit={ false }
-              onSubmitEditing={
-                () => this.focusNextField('apolipoproteiner')}
-              onChangeText={
-                (triglycerider) => this.setState({triglycerider})}
-              ref={
-                (input) => this.inputs['triglycerider'] = input}
-            />
-
-            <TextInput
-              style={styles.textInput}
-              placeholder='målvärde apolipoproteiner'
-              placeholderTextColor='#ced0ce'
-              value={this.state.apolipoproteiner}
-              //onEndEditing={this._submit}
-              returnKeyType='next'
-              //underlineColorAndroid='transparent'
-              underlineColorAndroid='#ced0ce'
-              blurOnSubmit={ false }
-              onSubmitEditing={
-                () => this.focusNextField('bloodpressure')}
-              onChangeText={
-                (apolipoproteiner) => this.setState({apolipoproteiner})}
-              ref={
-                (input) => this.inputs['apolipoproteiner'] = input}
-            />
-
-            <TextInput
-              style={styles.textInput}
-              placeholder='målvärde bloodpressure'
-              placeholderTextColor='#ced0ce'
-              value={this.state.bloodpressure}
-              //onEndEditing={this._submit}
-              returnKeyType='next'
-              //underlineColorAndroid='transparent'
-              underlineColorAndroid='#ced0ce'
-              blurOnSubmit={ false }
-              onSubmitEditing={
-                () => this.focusNextField('HbA1c-bloodsugar')}
-              onChangeText={
-                (bloodpressure) => this.setState({bloodpressure})}
-              ref={
-                (input) => this.inputs['bloodpressure'] = input}
-            />
-
-            <TextInput
-              style={styles.textInput}
-              placeholder='målvärde HbA1c-bloodsugar'
-              placeholderTextColor='#ced0ce'
-              value={this.state.HbA1c_bloodsugar}
-              //onEndEditing={this._submit}
-              returnKeyType='next'
-              //underlineColorAndroid='transparent'
-              underlineColorAndroid='#ced0ce'
-              blurOnSubmit={ false }
-              onSubmitEditing={
-                () => this.focusNextField('waist')}
-              onChangeText={
-                (HbA1c_bloodsugar) => this.setState({HbA1c_bloodsugar})}
-              ref={
-                (input) => this.inputs['HbA1c-bloodsugar'] = input}
-            />
-
-            <TextInput
-              style={styles.textInput}
-              placeholder='målvärde waist'
-              placeholderTextColor='#ced0ce'
-              value={this.state.waist}
-              //onEndEditing={this._submit}
-              returnKeyType='next'
-              //underlineColorAndroid='transparent'
-              underlineColorAndroid='#ced0ce'
-              blurOnSubmit={ false }
-              onSubmitEditing={
-                () => this.focusNextField('vikt')}
-              onChangeText={
-                (waist) => this.setState({waist})}
-              ref={
-                (input) => this.inputs['waist'] = input}
-            />
-
-            <TextInput
-              style={styles.textInput}
-              placeholder='målvärde vikt'
-              placeholderTextColor='#ced0ce'
-              value={this.state.vikt}
+              //value={`kolesterol ${this.state.kolesterol}`}
               //onEndEditing={this._submit}
               returnKeyType='done'
               //underlineColorAndroid='transparent'
               underlineColorAndroid='#ced0ce'
-              blurOnSubmit={ true }
+              blurOnSubmit={ false }
+              //onSubmitEditing={
+                //() => this.focusNextField('LDL-kolesterol')}
               onChangeText={
-                (vikt) => this.setState({vikt})}
-              ref={
-                (input) => this.inputs['vikt'] = input}
+                (kolesterol) => this.setState({kolesterol})}
+              //ref={
+                //(input) => this.inputs['kolesterol'] = input}
             />
 
             <TouchableOpacity
               style={styles.btn}
-              onPress={this._submit}>
-              <Text>Spara målvärden</Text>
+              onPress={this._submitData}>
+              <Text>Spara nya målvärden</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={this._displayData}>
+              <Text>Visa målvärden</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.btn}
               onPress={this._confirmRemoveData}>
-              <Text>Radera alla värden</Text>
+              <Text>Radera målvärden</Text>
             </TouchableOpacity>
 
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    );
-  }
+    );  
+  }  
 }
 
-const styles = StyleSheet.create({
-  Container: {
+const styles = StyleSheet.create ({
+  container: {
     flex: 1,
-    //flexDirection: 'row',
     marginTop: 30,
-    //alignItems: 'stretch',
     //backgroundColor: '#fdfdfd',
-    //backgroundColor: 'red',
-  },
-  contentContainer: {
-    //flex: 1,
-    //paddingVertical: 50,
-    //alignItems: 'stretch',
     //justifyContent: 'center',
-    //backgroundColor: '#2896d3',
-    //backgroundColor: '#990000',
-    //backgroundColor: '#fdfdfd',
-    //paddingLeft: 40,
-    //paddingRight: 40,    
-  },
-  headerContainer: {
-    //flex: 1,
-    //flexDirection: 'row',
-    backgroundColor: '#f2f2f2',
-    borderBottomWidth: 2,
-    borderBottomColor: '#ff0000',
-  },
-  innerHeaderContainer: {
-    //flex: 1,
-    flexDirection: 'row',
-    //padding: 15,
-    height: 67,
-  },
-  headerLeft: {
-    flex:1,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    marginLeft: 20,
-    //backgroundColor: 'red'
-  },
-  headerCenter: {
-    flex:3, 
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 20,
-    //backgroundColor: 'blue'
-  },
-  headerRight: {
-    flex:1, 
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    marginRight: 20,
-    //backgroundColor: 'green'
-  },
+    //alignItems: 'center',
+  },  
   middleContainer: {
     flex: 7,
     alignItems: 'stretch', 
+  },
+  topContainer: {
+    flex: 7,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   textInput: {
     flex: 1,

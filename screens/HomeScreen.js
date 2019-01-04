@@ -9,87 +9,38 @@ class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state={
-      isLoading: true,
-      dataSource: '',  
+      kolesterol: "1",
+      LDL_kolesterol: "1",
+      HDL_kolesterol: "1",
+      triglycerider: "1",
+      apolipoproteiner: "1",
+      bloodpressure: "1",
+      HbA1c_bloodsugar: "1",
+      waist: "1",
+      vikt: "1",
     }  
   }
 
   componentDidMount() {
     console.log('HomeScreen componentDidMount');  
+    //console.log("States", this.state.kolesterol);
   }
 
   componentDidUpdate() {
     console.log('HomeScreen componentDidUpdate');  
   }
 
-
-  /*
-  _load = async(endpoint) => {
-    try {
-        const API_STEM = await AsyncStorage.getItem('API_STEM');
-        let response = await fetch(`${API_STEM}${endpoint}`);
-        let responseJson = await response.text();
-
-        this.setState({
-        isLoading: false,
-        dataSource: responseJson,
-        refreshing: false,
-        }, function() {
-            console.log('dataSource: ', responseJson);
-            console.log('dataSource: ', typeof responseJson);
-            Alert.alert("New Data Recieved"); 
-        });
-
-    } catch(error) {
-        console.error(error);    
-        Alert.alert("Check address in settings.");
-    }
-  }
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <View style={styles.upperContainer}>
-          <Text>Tracer MPPT regulator</Text>
-        </View>
-        <View style={styles.middleContainer}>
-          <TouchableOpacity
-            underlayColor = 'white'
-            //onPress={() => this._load("/load_on")}
-            onPress={() => {
-              AsyncStorage.setItem('ENDPOINT', '/load_on')
-              this.props.navigation.navigate('Load')}}
-          >
-            <View style={styles.button}>
-              <Text style={styles.buttonText}>Load On</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            underlayColor = 'white'
-            //onPress={() => this._load("/load_off")}
-            onPress={() => {
-              AsyncStorage.setItem('ENDPOINT', '/load_off')
-              this.props.navigation.navigate('Load')}}
-          >
-            <View style={styles.button}>
-              <Text style={styles.buttonText}>Load Off</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );  
-  }
-  */
-
   render() {
     return(
       <View style={styles.container}>
         <View style={header.headerContainer}>
           <View style={header.headerLeft}>
-            <Image
-              source={require('../images/heart.jpeg')}
-              style={{ width: 32, height: 30 }}  
-            />
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('Settings')}>
+              <Text>
+              <AntDesign name="setting" size={30} />
+              </Text>
+            </TouchableOpacity>
           </View>
           <View style={header.headerCenter}>
             <Text style={{fontSize: 18}}>Hjärtboken Hem</Text>

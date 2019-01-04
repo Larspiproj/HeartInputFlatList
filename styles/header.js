@@ -10,6 +10,12 @@ const header = StyleSheet.create({
     borderBottomColor: '#ff0000',
     //height: 70,
   },
+  innerHeaderContainer: {
+    //flex: 1,
+    flexDirection: 'row',
+    //padding: 15,
+    height: 67,
+  },
   headerLeft: {
     flex:1,
     justifyContent: 'center',

@@ -31,6 +31,7 @@ class AnalysisScreen extends Component {
     const result = navigation.getParam('result');
     const date = navigation.getParam('date');
     const id = navigation.getParam('id');
+    const key = navigation.getParam('key');
     return(
       <View style={styles.container}>
         <View style={header.headerContainer}>
@@ -60,6 +61,7 @@ class AnalysisScreen extends Component {
           <Text>{ result }</Text>
           <Text>{ date }</Text>
           <Text>{ id }</Text>
+          <Text>key: { key }</Text>
         </View>
         <View style={styles.bottomContainer}>
           <TouchableOpacity

@@ -39,7 +39,20 @@ class HistoryScreen extends Component {
         //const kolesterol = [];
         const values = [];
         const keyArray = [];
-        const remove = ["nextKey", "nextId", "latestKey"]
+        const remove = [
+                "nextKey",
+                "nextId",
+                "latestKey",
+                "kolesterol",
+                "LDL_kolesterol",
+                "HDL_kolesterol",
+                "triglycerider",
+                "apolipoproteiner",
+                "bloodpressure",
+                "HbA1c_bloodsugar",
+                "waist",
+                "vikt",
+              ]
         const history = [];
 
         filtered = keys.filter(
@@ -50,6 +63,7 @@ class HistoryScreen extends Component {
         );
 
         keysSorted = filtered.sort(function(a, b){return a-b});
+        console.log("KeysSorted", keysSorted);
 
         const items = await AsyncStorage.multiGet((keysSorted), (error, stores) => {
         stores.map((result, i, store) => {

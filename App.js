@@ -4,24 +4,27 @@ import { createAppContainer, createStackNavigator, createMaterialTopTabNavigator
 
 import { AntDesign } from '@expo/vector-icons';
 
-import FlatListScreen from "./screens/FlatListScreen";
-import TextInputScreen from "./screens/TextInputScreen";
 import HomeScreen from "./screens/HomeScreen";
+import HomeHelpScreen from "./screens/HomeHelpScreen";
+import HartBookScreen from "./screens/HartBookScreen";
+import Chapter1Screen from "./screens/Chapter1Screen";
+import FlatListScreen from "./screens/FlatListScreen";
+import HelpScreen from "./screens/HelpScreen";
 import AnalysisScreen from "./screens/AnalysisScreen";
 import HistoryScreen from "./screens/HistoryScreen";
 import FactsScreen from "./screens/FactsScreen";
-import HelpScreen from "./screens/HelpScreen";
+import TextInputScreen from "./screens/TextInputScreen";
 import InputsHelpScreen from "./screens/InputsHelpScreen";
-import HomeHelpScreen from "./screens/HomeHelpScreen";
 import TargetValuesScreen from "./screens/TargetValuesScreen";
-import HartBookScreen from "./screens/HartBookScreen";
-import Chapter1Screen from "./screens/Chapter1Screen";
 import TargetValuesHelpScreen from "./screens/TargetValuesHelpScreen";
+import SettingsScreen from "./screens/SettingsScreen";
 
 const HomeStack = createStackNavigator (
   {
     Home: HomeScreen,
     HomeHelp: HomeHelpScreen,  
+    Settings: SettingsScreen,
+    TargetValues: TargetValuesScreen,
   },
   {
     defaultNavigationOptions: {
@@ -70,8 +73,8 @@ const TextInputStack = createStackNavigator (
   {
     Inputs: TextInputScreen,  
     InputsHelp: InputsHelpScreen,  
-    TargetValues: TargetValuesScreen,
-    TargetValuesHelp: TargetValuesHelpScreen,
+    //TargetValues: TargetValuesScreen,
+    //TargetValuesHelp: TargetValuesHelpScreen,
   },
   {
     defaultNavigationOptions: {
@@ -82,6 +85,19 @@ const TextInputStack = createStackNavigator (
     },
   }
 );
+
+/*
+const SettingsStack = createStackNavigator (
+  {
+    Settings: SettingsScreen,  
+  },
+  {
+    defaultNavigationOptions: {
+      header: null
+    },
+  }
+);
+*/
 
 const AppNavigator = createMaterialTopTabNavigator (
   {
