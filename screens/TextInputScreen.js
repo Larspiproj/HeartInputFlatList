@@ -5,6 +5,7 @@ import { Image, ScrollView, KeyboardAvoidingView, Keyboard, Alert, AsyncStorage,
    
 //import header from '../styles/header.js';
 import { AntDesign } from '@expo/vector-icons';
+import Input from '../components/Input';
 
 //import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 const state = {
@@ -22,7 +23,12 @@ const state = {
   vikt: "",
 }
 
-class FlatListScreen extends Component {
+class TextInputScreen extends Component {
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerTitle: 'Dina värden',
+    }  
+  }
   constructor(props) {
     super(props);
     this.state={ state }
@@ -38,7 +44,7 @@ class FlatListScreen extends Component {
 
   componentDidMount() {
     console.log("TextInputScreen componentDidMount");
-    this._initialState().done();
+    this._initialState();
   }
 
   componentDidUpdate() {
@@ -236,39 +242,15 @@ class FlatListScreen extends Component {
     console.log("TextInputScreen render executed");
     return(
       <KeyboardAvoidingView behavior='padding' style={styles.Container}>
-        <ScrollView keyboardShouldPersistTaps='always' stickyHeaderIndices={[0]}
+        <ScrollView keyboardShouldPersistTaps='always' stickyHeaderIndices={[1]}
             contentContainerStyle={styles.contentContainer}>
-          <View style={styles.headerContainer}>
-            <View style={styles.innerHeaderContainer}>
-              <View style={styles.headerLeft}>
-                <Image
-                  source={require('../images/heart.jpeg')}
-                  style={{ width: 32, height: 30 }}  
-                />
-              </View>
-              <View style={styles.headerCenter}>
-                <Text style={{fontSize: 18}}>Dina värden</Text>
-              </View>
-              <View style={styles.headerRight}>
-                <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate('InputsHelp')}>
-                  <Text>
-                  <AntDesign name="question" size={30} />
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
           <View style={styles.middleContainer}>
-            <TextInput
-              style={styles.textInput}
+            <Input
               placeholder='date'
-              placeholderTextColor='#ced0ce'
               value={this.state.date}
               //onEndEditing={this._submit}
               returnKeyType='next'
-              underlineColorAndroid='#ced0ce'
-              blurOnSubmit={ false }
+              //blurOnSubmit={ false }
               onFocus={
                 () => this._datePicker()}
               onSubmitEditing={
@@ -283,7 +265,7 @@ class FlatListScreen extends Component {
               style={styles.textInput}
               placeholder='kolesterol'
               placeholderTextColor='#ced0ce'
-              //value={this.state.kolesterol}
+              value={this.state.kolesterol}
               //onEndEditing={this._submit}
               returnKeyType='next'
               //underlineColorAndroid='transparent'
@@ -468,9 +450,9 @@ const styles = StyleSheet.create({
   Container: {
     flex: 1,
     //flexDirection: 'row',
-    marginTop: 30,
+    //marginTop: 30,
     //alignItems: 'stretch',
-    //backgroundColor: '#fdfdfd',
+    backgroundColor: '#fdfdfd',
     //backgroundColor: 'red',
   },
   contentContainer: {
@@ -525,8 +507,9 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     alignSelf: 'stretch',
-    padding: 10,
-    marginTop: 20,
+    paddingTop: 20,
+    paddingBottom: 10,
+    marginLeft: 15,
     fontSize: 18,
     backgroundColor: '#fdfdfd',
     //width: 200,
@@ -549,4 +532,25 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FlatListScreen;
+export default TextInputScreen;
+
+/*
+            <TextInput
+              style={styles.textInput}
+              placeholder='date'
+              placeholderTextColor='#ced0ce'
+              value={this.state.date}
+              //onEndEditing={this._submit}
+              returnKeyType='next'
+              underlineColorAndroid='#ced0ce'
+              blurOnSubmit={ false }
+              onFocus={
+                () => this._datePicker()}
+              onSubmitEditing={
+                () => this.focusNextField('kolesterol')}
+              onChangeText={
+                (date) => this.setState({date})}
+              ref={
+               (input) => this.inputs['yyyymmdd'] = input}
+            />
+*/

@@ -1,35 +1,24 @@
 import React, { Component } from 'react';
 import { TouchableOpacity, StyleSheet, View, Text } from 'react-native';
 
-import header from '../styles/header.js';
+//import header from '../styles/header.js';
+import Header from '../components/Header';
 //import { AntDesign } from '@expo/vector-icons';
-//import { IconLeft, IconQuestion } from '../components/Icons';
-//import ImageHeart from '../components/ImageHeart';
-//import ButtonQuestion from '../components/ButtonQuestion';
+import { IconLeft, IconQuestion } from '../components/Icons';
 
 class FactsScreen extends Component {
-  //const { navigation } = this.props;
-  //const analysis = navigation.getParam('analysis');
-  /*
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: navigation.getParam('analysis'),
-      headerRight: <ButtonQuestion />,
-      //headerLeft: <IconLeft />,
-      headerLeft: <ImageHeart />,
-      //headerBackImage: <IconLeft />,
-      headerTitleStyle: {
-        fontWeight: '100',
-      },
-    };
-  };
-  */
 
   render() {
     const { navigation } = this.props;
     const analysis = navigation.getParam('analysis');
     return(
       <View style={styles.container}>
+        <Header
+          analysis={analysis}
+          onPressLeft={() => this.props.navigation.goBack()}>
+          <IconLeft />
+          <IconQuestion />
+        </Header>
         <View style={styles.topContainer}>
           <Text>FactsScreen</Text>
         </View>

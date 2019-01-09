@@ -169,22 +169,16 @@ class FlatListScreen extends Component {
                   date: this.state.dataSource[0].result,
                   id: item.id,
               });
-            }}
-            >
-              <View style={{
-                flex: 1,
-                //backgroundColor: this.props.index % 2 == 0 ? '#fdfdfd' : '#990000'  
-              }}>
-                <View style={styles.rowsContainer}>
-                  <Text style={styles.analysis}>
-                    {item.analysis}</Text>
-                  <Text style={styles.result}>
-                    {item.result}</Text>
-                  <TouchableOpacity onPress={() => {
-                    Alert.alert("Button Pressed");}}>
-                    <Text>Button</Text>
-                  </TouchableOpacity>
-                </View>
+            }}>
+              <View style={styles.rowsContainer}>
+                <Text style={styles.analysis}>
+                  {item.analysis}</Text>
+                <Text style={styles.result}>
+                  {item.result}</Text>
+                <TouchableOpacity onPress={() => {
+                  Alert.alert("Button Pressed");}}>
+                  <Text>Button</Text>
+                </TouchableOpacity>
               </View>
             </TouchableOpacity>
             }
@@ -215,7 +209,9 @@ const styles = StyleSheet.create({
     flex: 3,
     textAlign: "left",
     alignItems: "center",
-    padding: 15,
+    //padding: 15,
+    paddingTop: 20,
+    paddingBottom: 5,
     marginLeft: 10,
     fontSize: 18,
   },
@@ -223,9 +219,11 @@ const styles = StyleSheet.create({
     flex: 2,
     textAlign: "left",  
     alignItems: "center",
-    padding: 15,
+    //padding: 15,
+    paddingTop: 20,
+    paddingBottom: 5,
     marginLeft: 10,
-    fontSize: 20,
+    fontSize: 18,
   },
   btn: {
     //flex: 1,
